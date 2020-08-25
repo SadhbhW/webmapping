@@ -1,0 +1,8 @@
+{
+  "name": "World Cities",
+  "short_name": "Cities",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#FFFFFF",
+  "description": "A web app to display world cities from a postgresql db"
+}

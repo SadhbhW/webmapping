@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+
+
+{% load leaflet_tags %}
+{% leaflet_js %}
+{% leaflet_css %}
+
+<head>
+    <title>World Cities</title>
+    <link rel="manifest" href="./manifest.json">
+</head>
+
+<body>
+<h1>A map showing the cities around the World</h1>
+{% leaflet_map "map" %}
+{% leaflet_js plugins="ALL" %}
+{% leaflet_css plugins="ALL" %}
+</body>
+
+<script>
+
+registerServiceWorker();
+//check if supported
+async function registerServiceWorker() {
+    //call object
+    if ('serviceWorker' in navigator){
+        try{
+            //read in js file
+            await navigator.serviceWorker.register('serviceworker.js');
+        } catch (e) {
+            console.log("error")
+        }
+    }
+
+}
+
+L.map('map').setView([53.24569382011436, -6.1406707763671875], 15);
+
+{% for each_model in loca %}
+
+L.polygon(
+{{ each_model.city_coords_list }}, {color: 'red'}
+).bindPopup({{ each_model.name }}).addTo(map)
+
+{% endfor %}
+
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+}).addTo(map);
+
+L.marker([53.24569382011436, -6.1406707763671875]).addTo(map)
+    .bindPopup(' Your Current Location')
+    .openPopup();
+
+map.on('click', function(ev) {
+    var latlng = map.mouseEventToLatLng(ev.originalEvent);
+    console.log(latlng.lat + ', ' + latlng.lng)
+    console.log(typeof latlng)
+});
+
+
+</script>
+</html>
