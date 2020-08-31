@@ -36,8 +36,12 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.gis',
+    'rest_framework',
+    'rest_framework_gis',
+    'django_filters',
     'leaflet',
     'maps',
+    'pwa',
 ]
 
 MIDDLEWARE = [
@@ -78,14 +82,11 @@ DATABASES = {
         'ENGINE': 'django.contrib.gis.db.backends.postgis',
         'NAME': 'postgres',
         'USER': 'postgres',
-        'PASSWORD': 'Superdud1',
+        'PASSWORD': 'monday05',
         'HOST': '127.0.0.1',
         'PORT': '5432',
     }
 }
-
-# Password validation
-# https://docs.djangoproject.com/en/3.0/ref/settings/#auth-password-validators
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -102,8 +103,16 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-# Internationalization
-# https://docs.djangoproject.com/en/3.0/topics/i18n/
+
+LEAFLET_CONFIG = {
+    'TILES': [('OSM', 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {"useCache": True, "crossOrigin": True})],
+    'PLUGINS': {
+        'PouchDBCached': {
+            'js': 'https://unpkg.com/leaflet.tilelayer.pouchdbcached@latest/L.TileLayer.PouchDBCached.js',
+            'auto-include': True,
+        },
+    }
+}
 
 LANGUAGE_CODE = 'en-us'
 
@@ -115,7 +124,5 @@ USE_L10N = True
 
 USE_TZ = True
 
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/3.0/howto/static-files/
 
 STATIC_URL = '/static/'

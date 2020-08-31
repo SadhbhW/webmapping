@@ -2,63 +2,67 @@
 <html lang="en">
 
 
+<style>
+    #my_map{
+        height: 300px;
+        position: relative;
+        width: 900px;
+    }
+</style>
+
 {% load leaflet_tags %}
 {% leaflet_js %}
 {% leaflet_css %}
+{% load static %}
 
 <head>
-    <title>World Cities</title>
-    <link rel="manifest" href="./manifest.json">
+    <title>Global Starbucks Locations</title>
+    <link rel="manifest" href="static/manifest.json"/>
+
 </head>
 
 <body>
-<h1>A map showing the cities around the World</h1>
-{% leaflet_map "map" %}
-{% leaflet_js plugins="ALL" %}
-{% leaflet_css plugins="ALL" %}
+
+<h1>Starbucks locations from around the world!</h1>
+
+<div id="my_map"></div>
+
 </body>
 
 <script>
+    //zooms in on starbucks stephens green
+let map = L.map('my_map').setView([53.339133, -6.257164],15);
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+}).addTo(map);
+function onMapClick(e) {
+alert("The lat and long at this location are " + e.latlng);
+}
+map.on('click', onMapClick);
 
-registerServiceWorker();
-//check if supported
+console.log({{ var }})
+
+//attempt
+function populatingMap(sbLocations){
+
+   [].forEach.call(sbLocations, function(location){
+
+       L.circleMarker([location.lat, location.lng]).addTo(map);
+
+    })
+  }
+
+//registerServiceWorker();
 async function registerServiceWorker() {
     //call object
     if ('serviceWorker' in navigator){
         try{
             //read in js file
-            await navigator.serviceWorker.register('serviceworker.js');
+            await navigator.serviceWorker.register('./static/serviceworker.js');
         } catch (e) {
             console.log("error")
         }
     }
-
 }
-
-L.map('map').setView([53.24569382011436, -6.1406707763671875], 15);
-
-{% for each_model in loca %}
-
-L.polygon(
-{{ each_model.city_coords_list }}, {color: 'red'}
-).bindPopup({{ each_model.name }}).addTo(map)
-
-{% endfor %}
-
-L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-}).addTo(map);
-
-L.marker([53.24569382011436, -6.1406707763671875]).addTo(map)
-    .bindPopup(' Your Current Location')
-    .openPopup();
-
-map.on('click', function(ev) {
-    var latlng = map.mouseEventToLatLng(ev.originalEvent);
-    console.log(latlng.lat + ', ' + latlng.lng)
-    console.log(typeof latlng)
-});
-
-
 </script>
 </html>
